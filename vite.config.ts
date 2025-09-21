@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/JsonRun/', // GitHub Pages仓库名称
+  base: '/JsonRun/', // GitHub Pages仓库名称 - Adu03/JsonRun
   plugins: [react()],
   build: {
     rollupOptions: {
