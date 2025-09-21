@@ -1,0 +1,203 @@
+/**
+ * 功能按钮面板组件样式
+ */
+
+.function-panel {
+  padding: 12px;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.5s ease;
+}
+
+.function-panel:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.function-panel-section {
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.function-panel-section:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.section-title {
+  margin: 0 0 10px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  padding-left: 6px;
+  border-left: 3px solid #1890ff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.indent-selector {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: #fafafa;
+  border-radius: 8px;
+}
+
+.selector-label {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+/* 按钮样式优化 */
+.function-panel .ant-btn {
+  font-size: 13px;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 6px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.function-panel .ant-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.function-panel .ant-btn:active {
+  transform: translateY(0);
+}
+
+.function-panel .ant-btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.function-panel .ant-btn-primary:hover {
+  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+}
+
+.function-panel .ant-btn-danger {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a50 100%);
+  border: none;
+}
+
+.function-panel .ant-btn-danger:hover {
+  background: linear-gradient(135deg, #ff5252 0%, #f44336 100%);
+}
+
+.function-panel .ant-btn-icon {
+  font-size: 16px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .function-panel {
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  
+  .function-panel-section {
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+  }
+  
+  .section-title {
+    font-size: 13px;
+    margin-bottom: 12px;
+    padding-left: 6px;
+  }
+  
+  .function-panel .ant-btn {
+    font-size: 13px;
+    height: 32px;
+    padding: 0 12px;
+  }
+  
+  .indent-selector {
+    padding: 8px;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .function-panel {
+    padding: 12px;
+  }
+  
+  .section-title {
+    font-size: 12px;
+    letter-spacing: 0.3px;
+  }
+  
+  .function-panel .ant-btn {
+    font-size: 12px;
+    height: 28px;
+    padding: 0 10px;
+  }
+}
+
+/* 深色主题适配 */
+@media (prefers-color-scheme: dark) {
+  .function-panel {
+    background: #1e1e1e;
+    border-color: #434343;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  .function-panel:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+  
+  .function-panel-section {
+    border-bottom-color: #303030;
+  }
+  
+  .section-title {
+    color: #e8e8e8;
+    border-left-color: #3498db;
+  }
+  
+  .selector-label {
+    color: #b4b4b4;
+  }
+  
+  .indent-selector {
+    background: #2a2a2a;
+  }
+  
+  /* 深色主题下的按钮样式优化 */
+  .function-panel .ant-btn {
+    background: #2d2d2d;
+    border-color: #434343;
+    color: #e8e8e8;
+  }
+  
+  .function-panel .ant-btn:hover {
+    background: #3a3a3a;
+    border-color: #525252;
+  }
+  
+  .function-panel .ant-btn-primary {
+    background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+  }
+  
+  .function-panel .ant-btn-primary:hover {
+    background: linear-gradient(135deg, #1a252f 0%, #2980b9 100%);
+  }
+  
+  .function-panel .ant-btn-danger {
+    background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+  }
+  
+  .function-panel .ant-btn-danger:hover {
+    background: linear-gradient(135deg, #a93226 0%, #c0392b 100%);
+  }
+}
