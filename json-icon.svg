@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景 -->
+  <rect x="0" y="0" width="512" height="512" rx="64" fill="#2c3e50"/>
+  
+  <!-- JSON文本样式 -->
+  <g fill="#ecf0f1" font-family="Consolas, monospace">
+    <!-- 左大括号 -->
+    <text x="120" y="180" font-size="160" font-weight="bold">{</text>
+    <!-- 右大括号 -->
+    <text x="320" y="380" font-size="160" font-weight="bold">}</text>
+  </g>
+  
+  <!-- 代码高亮元素 -->
+  <g fill="#e74c3c">
+    <text x="180" y="240" font-size="40" font-weight="bold" font-family="Consolas, monospace">"key":</text>
+  </g>
+  
+  <g fill="#2ecc71">
+    <text x="180" y="300" font-size="40" font-weight="bold" font-family="Consolas, monospace">"value"</text>
+  </g>
+</svg>
