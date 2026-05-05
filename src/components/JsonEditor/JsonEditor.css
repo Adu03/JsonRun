@@ -71,30 +71,25 @@
   z-index: 1;
 }
 
-/* Monaco编辑器样式调整 */
-.monaco-editor {
-  border-radius: 0 !important;
+.codemirror-wrapper {
+  height: 100%;
 }
 
-.monaco-editor .margin {
-  background-color: #fafafa !important;
+.cm-editor {
+  height: 100%;
 }
 
-.monaco-editor .scroll-decoration {
-  display: none;
+.cm-scroller {
+  overflow: auto;
 }
 
 /* 只读模式下的特殊样式 */
-.json-editor.readonly-mode .monaco-editor {
+.json-editor.readonly-mode .cm-editor {
   background-color: #fafafa !important;
 }
 
-.json-editor.readonly-mode .monaco-editor .view-lines {
+.json-editor.readonly-mode .cm-content {
   cursor: default !important;
-}
-
-.json-editor.readonly-mode .monaco-editor .cursor {
-  opacity: 0.5 !important;
 }
 
 /* 深色主题适配 */
@@ -121,12 +116,12 @@
     color: #595959;
   }
   
-  .monaco-editor .margin {
+  .cm-editor {
     background-color: #141414 !important;
   }
   
   /* 深色主题下只读模式样式 */
-  .json-editor.readonly-mode .monaco-editor {
+  .json-editor.readonly-mode .cm-editor {
     background-color: #141414 !important;
   }
 }

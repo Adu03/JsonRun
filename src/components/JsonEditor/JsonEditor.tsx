@@ -1,11 +1,14 @@
 /**
  * JSON编辑器组件
- * 基于Monaco Editor的JSON编辑器
+ * 基于 CodeMirror 6 的JSON编辑器，优化了体积和加载速度
  */
 
-import React, { useRef, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { Button } from 'antd';
-import Editor from '@monaco-editor/react';
+import CodeMirror from '@uiw/react-codemirror';
+import { json } from '@codemirror/lang-json';
+import { vscodeDark, vscodeLight } from '@uiw/codemirror-theme-vscode';
+import { EditorView } from '@codemirror/view';
 import type { EditorTheme } from '../../types';
 import './JsonEditor.css';
 
@@ -49,65 +52,31 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
   showLineNumbers = true,
   actions = []
 }) => {
-  const editorRef = useRef<any>(null);
-
-  /**
-   * 编辑器加载完成回调
-   */
-  const handleEditorDidMount = useCallback((editor: any, monaco: any) => {
-    editorRef.current = editor;
-    
-    // 设置编辑器选项 - 优化滚动条显示
-    editor.updateOptions({
-      fontSize: 14,
-      wordWrap: 'on',
-      minimap: { 
-        enabled: window.innerWidth > 768,
-        autohide: true // 自动隐藏小地图
-      },
-      scrollBeyondLastLine: false,
-      automaticLayout: true,
-      tabSize: 2,
-      insertSpaces: true,
-      formatOnPaste: !readOnly, // 只读模式下禁用粘贴格式化
-      formatOnType: !readOnly, // 只读模式下禁用输入格式化
-      scrollbar: {
-        vertical: 'auto', // 根据需要显示垂直滚动条
-        horizontal: 'auto', // 根据需要显示水平滚动条
-        verticalScrollbarSize: 6,
-        horizontalScrollbarSize: 6
-      },
-      // 只读模式下的特殊配置
-      domReadOnly: readOnly,
-      renderLineHighlight: readOnly ? 'none' : 'line', // 只读模式下不显示行高亮
-      hideCursorInOverviewRuler: readOnly, // 只读模式下隐藏光标在概览标尺中
-      matchBrackets: readOnly ? 'never' : 'always', // 只读模式下禁用括号匹配
-      occurrencesHighlight: readOnly ? 'off' : 'singleFile', // 只读模式下禁用选中高亮
-      selectionHighlight: !readOnly, // 只读模式下禁用选择高亮
-      folding: true, // 启用代码折叠
-      foldingStrategy: 'auto', // 自动折叠策略
-      showFoldingControls: 'always', // 始终显示折叠控件
-      unfoldOnClickAfterEndOfLine: false // 点击行尾不展开
-    });
-
-    // 如果是JSON模式，启用JSON验证
-    if (language === 'json') {
-      // Monaco Editor内置JSON验证
-      const model = editor.getModel();
-      if (model) {
-        monaco.editor.setModelLanguage(model, 'json');
-      }
-    }
-  }, [language, readOnly]);
 
   /**
    * 内容变化处理
    */
-  const handleChange = useCallback((newValue: string | undefined) => {
-    if (onChange && newValue !== undefined) {
+  const handleChange = useCallback((newValue: string) => {
+    if (onChange) {
       onChange(newValue);
     }
   }, [onChange]);
+
+  // 将现有主题映射到 CodeMirror 对应的 VSCode 主题
+  const cmTheme = theme === 'vs-dark' || theme === 'hc-black' ? vscodeDark : vscodeLight;
+
+  // CodeMirror 扩展配置
+  const extensions = [
+    EditorView.lineWrapping, // 自动换行
+    EditorView.theme({
+      "&": { height: "100%" },
+      ".cm-scroller": { overflow: "auto" }
+    })
+  ];
+
+  if (language === 'json') {
+    extensions.push(json());
+  }
 
   return (
     <div className={`json-editor ${readOnly ? 'readonly-mode' : ''}`}>
@@ -133,39 +102,24 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
         )}
       </div>
       <div className="json-editor-container">
-        <Editor
+        <CodeMirror
+          value={value}
           height={height}
-                language={language}
-                theme={theme}
-                value={value}
-                onChange={handleChange}
-                onMount={handleEditorDidMount}
-                loading={<div className="editor-loading">加载编辑器中...</div>}
-                options={{
-                  readOnly,
-                  lineNumbers: showLineNumbers ? 'on' : 'off',
-                  roundedSelection: false,
-                  scrollBeyondLastLine: false,
-                  automaticLayout: true,
-                  wordWrap: 'on',
-                  fontSize: 14,
-                  minimap: {
-                    enabled: window.innerWidth > 768
-                  },
-                  // 只读模式下的额外配置
-                  domReadOnly: readOnly,
-                  renderLineHighlight: readOnly ? 'none' : 'line',
-                  hideCursorInOverviewRuler: readOnly,
-                  matchBrackets: readOnly ? 'never' : 'always',
-                  occurrencesHighlight: readOnly ? 'off' : 'singleFile',
-                  selectionHighlight: !readOnly
-                }}
+          theme={cmTheme}
+          extensions={extensions}
+          onChange={handleChange}
+          readOnly={readOnly}
+          editable={!readOnly}
+          basicSetup={{
+            lineNumbers: showLineNumbers,
+            foldGutter: true,
+            highlightActiveLine: !readOnly,
+            highlightSelectionMatches: !readOnly,
+            autocompletion: !readOnly,
+          }}
+          placeholder={placeholder}
+          className="codemirror-wrapper"
         />
-        {value === '' && !readOnly && (
-          <div className="editor-placeholder">
-            {placeholder}
-          </div>
-        )}
       </div>
     </div>
   );
