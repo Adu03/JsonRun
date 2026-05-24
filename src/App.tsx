@@ -3,16 +3,16 @@
  * JSON解析工具的主界面
  */
 
-import React, { useEffect, useCallback, useState } from 'react';
-import { Layout, message, Button, Space } from 'antd';
-import { CopyOutlined, SaveOutlined, FormatPainterOutlined, CompressOutlined, ClearOutlined, ExportOutlined, ImportOutlined, CheckCircleOutlined } from '@ant-design/icons';
+import React, { useEffect, useCallback, useState, useMemo } from 'react';
+import { Layout, message, Button, Space, Tag, Segmented } from 'antd';
+import { CopyOutlined, SaveOutlined, FormatPainterOutlined, CompressOutlined, ClearOutlined, ExportOutlined, ImportOutlined, CheckCircleOutlined, NodeIndexOutlined, DatabaseOutlined } from '@ant-design/icons';
 
 // 导入自定义Hook
 import { useJsonParser } from './hooks/useJsonParser';
 import { useLocalStorage } from './hooks/useLocalStorage';
 
 // 导入组件
-import { JsonEditor, ErrorDisplay, ThemeToggle, HistoryPanel } from './components';
+import { JsonEditor, ErrorDisplay, ThemeToggle, HistoryPanel, JsonTreeView } from './components';
 
 // 导入类型
 import type { UserSettings } from './types';
@@ -20,6 +20,7 @@ import type { HistoryItem } from './utils/storageUtils';
 
 // 导入工具
 import { saveToHistory, getHistory } from './utils/storageUtils';
+import { getJsonStats } from './utils/jsonUtils';
 
 // 导入样式
 import './App.css';
@@ -66,6 +67,9 @@ const App: React.FC = () => {
 
   // 历史记录状态
   const [history, setHistory] = useState<HistoryItem[]>([]);
+  
+  // 输出视图模式
+  const [outputView, setOutputView] = useState<'code' | 'tree'>('code');
 
   // 加载历史记录
   useEffect(() => {
@@ -168,12 +172,16 @@ const App: React.FC = () => {
     message.success('保存成功');
   }, [inputText, outputText]);
 
-  /**
-   * 格式化JSON（使用当前缩进设置）
-   */
+  // 格式化JSON（使用当前缩进设置）
   const handleFormat = useCallback(() => {
     format(settings.indentSize);
   }, [format, settings.indentSize]);
+
+  // 计算输出JSON的层级和节点数量
+  const outputStats = useMemo(() => {
+    if (!outputText) return null;
+    return getJsonStats(outputText);
+  }, [outputText]);
 
   return (
     <Layout className={`app-layout ${settings.theme === 'dark' ? 'dark-theme' : 'light-theme'}`} data-theme={settings.theme}>
@@ -303,7 +311,31 @@ const App: React.FC = () => {
             {/* 输出区域 - 35% */}
             <div className="output-section">
               <JsonEditor
-                title="输出结果"
+                title={
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <Segmented 
+                        options={[
+                          { label: '代码', value: 'code' },
+                          { label: '视图', value: 'tree' }
+                        ]} 
+                        value={outputView}
+                        onChange={(value) => setOutputView(value as 'code' | 'tree')}
+                        size="small"
+                      />
+                      {outputStats && (
+                        <div className="json-stats-badges">
+                          <Tag icon={<NodeIndexOutlined />} color="blue" bordered={false}>
+                            层级: {outputStats.depth}
+                          </Tag>
+                          <Tag icon={<DatabaseOutlined />} color="cyan" bordered={false}>
+                            {outputStats.typeLabel}: {outputStats.itemCount}
+                          </Tag>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                }
                 value={outputText}
                 readOnly={true}
                 theme={settings.editorTheme}
@@ -321,8 +353,9 @@ const App: React.FC = () => {
                     disabled: !outputText
                   }
                 ]}
-
-              />
+              >
+                {outputView === 'tree' && <JsonTreeView jsonString={outputText} />}
+              </JsonEditor>
             </div>
             
             {/* 历史记录区域 - 15% */}

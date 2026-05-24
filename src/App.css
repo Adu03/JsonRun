@@ -298,6 +298,20 @@ body {
   padding: 0 8px;
 }
 
+/* JSON统计标签样式 */
+.json-stats-badges {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.json-stats-badges .ant-tag {
+  margin-inline-end: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
 /* Monaco编辑器容器 */
 .monaco-editor-container {
   flex: 1;

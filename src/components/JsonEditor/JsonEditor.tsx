@@ -18,7 +18,7 @@ export interface JsonEditorProps {
   /** 内容变化回调 */
   onChange?: (value: string) => void;
   /** 编辑器标题 */
-  title?: string;
+  title?: React.ReactNode;
   /** 是否只读 */
   readOnly?: boolean;
   /** 编辑器主题 */
@@ -38,6 +38,8 @@ export interface JsonEditorProps {
     onClick: () => void;
     disabled?: boolean;
   }>;
+  /** 自定义子组件（例如传入树状视图，将替代默认的CodeMirror） */
+  children?: React.ReactNode;
 }
 
 const JsonEditor: React.FC<JsonEditorProps> = ({
@@ -50,7 +52,8 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
   height = '400px',
   placeholder = 'Enter your JSON here...',
   showLineNumbers = true,
-  actions = []
+  actions = [],
+  children
 }) => {
 
   /**
@@ -81,8 +84,10 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
   return (
     <div className={`json-editor ${readOnly ? 'readonly-mode' : ''}`}>
       <div className="json-editor-header">
-        <h3 className="json-editor-title">{title}</h3>
-        {readOnly && <span className="read-only-badge">只读</span>}
+        <div className="json-editor-header-left">
+          <div className="json-editor-title">{title}</div>
+          {readOnly && <span className="read-only-badge">只读</span>}
+        </div>
         {actions.length > 0 && (
           <div className="json-editor-actions">
             {actions.map((action, index) => (
@@ -102,24 +107,28 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
         )}
       </div>
       <div className="json-editor-container">
-        <CodeMirror
-          value={value}
-          height={height}
-          theme={cmTheme}
-          extensions={extensions}
-          onChange={handleChange}
-          readOnly={readOnly}
-          editable={!readOnly}
-          basicSetup={{
-            lineNumbers: showLineNumbers,
-            foldGutter: true,
-            highlightActiveLine: !readOnly,
-            highlightSelectionMatches: !readOnly,
-            autocompletion: !readOnly,
-          }}
-          placeholder={placeholder}
-          className="codemirror-wrapper"
-        />
+        {children ? (
+          children
+        ) : (
+          <CodeMirror
+            value={value}
+            height={height}
+            theme={cmTheme}
+            extensions={extensions}
+            onChange={handleChange}
+            readOnly={readOnly}
+            editable={!readOnly}
+            basicSetup={{
+              lineNumbers: showLineNumbers,
+              foldGutter: true,
+              highlightActiveLine: !readOnly,
+              highlightSelectionMatches: !readOnly,
+              autocompletion: !readOnly,
+            }}
+            placeholder={placeholder}
+            className="codemirror-wrapper"
+          />
+        )}
       </div>
     </div>
   );

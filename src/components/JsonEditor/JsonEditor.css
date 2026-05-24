@@ -16,7 +16,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  min-height: 36px;
+  min-height: 40px;
+}
+
+.json-editor-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1; /* 占据剩余空间 */
 }
 
 .json-editor-title {
@@ -24,6 +31,9 @@
   font-weight: 500;
   color: #595959;
   margin: 0;
+  display: flex;
+  align-items: center;
+  width: 100%; /* 让标题内的内容可以自己布局 */
 }
 
 .json-editor-actions {

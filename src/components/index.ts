@@ -7,6 +7,7 @@ export { default as FunctionPanel } from './FunctionPanel';
 export { default as ErrorDisplay } from './ErrorDisplay';
 export { default as ThemeToggle } from './ThemeToggle';
 export { default as HistoryPanel } from './HistoryPanel';
+export { default as JsonTreeView } from './JsonTreeView';
 
 export type { JsonEditorProps } from './JsonEditor';
 export type { FunctionPanelProps } from './FunctionPanel';

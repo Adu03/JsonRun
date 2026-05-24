@@ -113,3 +113,62 @@ export const getErrorContext = (jsonString: string, position: number, context: n
   const end = Math.min(jsonString.length, position + context);
   return jsonString.substring(start, end);
 };
+
+export interface JsonStats {
+  depth: number;
+  itemCount: number;
+  typeLabel: string;
+}
+
+/**
+ * 计算JSON的层级和节点数量
+ * @param jsonString - 要计算的JSON字符串
+ * @returns 包含层级和节点数量的对象，如果解析失败返回null
+ */
+export const getJsonStats = (jsonString: string): JsonStats | null => {
+  try {
+    if (!jsonString || jsonString.trim() === '') return null;
+    const parsed = JSON.parse(jsonString);
+    
+    let itemCount = 0;
+    let typeLabel = '节点';
+    
+    // 直观统计：根元素的子项数量
+    if (Array.isArray(parsed)) {
+      itemCount = parsed.length;
+      typeLabel = '元素';
+    } else if (parsed !== null && typeof parsed === 'object') {
+      itemCount = Object.keys(parsed).length;
+      typeLabel = '键值对';
+    } else {
+      itemCount = 1;
+      typeLabel = '值';
+    }
+    
+    // 直观层级：只有对象和数组算作嵌套层级，基本数据类型不增加层级
+    const getDepth = (obj: any): number => {
+      if (obj === null || typeof obj !== 'object') {
+        return 0; // 基本数据类型不增加额外深度
+      }
+      
+      let maxChildDepth = 0;
+      if (Array.isArray(obj)) {
+        for (const item of obj) {
+          maxChildDepth = Math.max(maxChildDepth, getDepth(item));
+        }
+      } else {
+        for (const key in obj) {
+          if (Object.prototype.hasOwnProperty.call(obj, key)) {
+            maxChildDepth = Math.max(maxChildDepth, getDepth(obj[key]));
+          }
+        }
+      }
+      return 1 + maxChildDepth;
+    };
+    
+    const depth = Math.max(1, getDepth(parsed));
+    return { depth, itemCount, typeLabel };
+  } catch (e) {
+    return null;
+  }
+};
